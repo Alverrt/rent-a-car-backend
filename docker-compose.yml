@@ -1,0 +1,44 @@
+version: "3"
+services:
+  app:
+    build: .
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    ports:
+      - "8080:3000"
+    command: npm run start:dev
+    volumes:
+      - .:/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - odev
+      - internal
+  postgres:
+    image: postgres:10.4
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456aA
+      POSTGRES_DB: uniodev
+    volumes:
+      - ./database:/var/lib/postgresql/data
+    networks:
+      - internal
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "5050:80"
+    networks:
+      - internal
+networks:
+  odev:
+    driver: bridge
+  internal:
