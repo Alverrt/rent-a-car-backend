@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { AuthUserDto } from './dto/auth-user.dto';
 
 @Injectable()
 export class UserService {
@@ -11,8 +12,18 @@ export class UserService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
   ) {}
+
   create(createUserDto: CreateUserDto) {
     return this.usersRepository.insert(createUserDto);
+  }
+
+  async auth(authUserDto: AuthUserDto) {
+    return await this.usersRepository.findOne({
+      where: {
+        email: authUserDto.email,
+        password: authUserDto.password,
+      },
+    });
   }
 
   findAll(): Promise<User[]> {
