@@ -1,1 +1,1 @@
-projeyi baslatmak icin docker-compose up
+projeyi baslatmak  icin docker-compose up
