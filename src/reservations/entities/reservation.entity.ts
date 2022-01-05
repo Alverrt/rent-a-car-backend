@@ -6,6 +6,7 @@ import {
   OneToOne,
   JoinColumn,
   OneToMany,
+  ManyToOne,
 } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 
@@ -14,10 +15,10 @@ export class Reservation {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToMany(() => User, (user) => user.reservations)
+  @ManyToOne(() => User, (user) => user.reservations)
   user: User;
 
-  @OneToOne(() => Vehicle)
+  @OneToOne(() => Vehicle, { cascade: true })
   @JoinColumn()
   vehicle: Vehicle;
 
@@ -25,5 +26,5 @@ export class Reservation {
   rezervasyonBaslangicTarihi: string;
 
   @Column()
-  rezervasyonBitisTarihi: number;
+  rezervasyonBitisTarihi: string;
 }

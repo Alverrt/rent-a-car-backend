@@ -1,15 +1,32 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/user/entities/user.entity';
+import { Repository } from 'typeorm';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
+import { Reservation } from './entities/reservation.entity';
+import { Vehicle } from '../vehicle/entities/vehicle.entity';
+import { DeleteReservationDto } from './dto/delete-reservation.dto';
 
 @Injectable()
 export class ReservationsService {
+  constructor(
+    @InjectRepository(Reservation)
+    private reservationsRepository: Repository<Reservation>,
+  ) {}
+
   create(createReservationDto: CreateReservationDto) {
-    return 'This action adds a new reservation';
+    return this.reservationsRepository.insert({
+      vehicle: { id: createReservationDto.vehicleId },
+      user: { id: createReservationDto.userId },
+      rezervasyonBaslangicTarihi:
+        createReservationDto.rezervasyonBaslangicTarihi,
+      rezervasyonBitisTarihi: createReservationDto.rezervasyonBitisTarihi,
+    });
   }
 
-  findAll() {
-    return `This action returns all reservations`;
+  findAll(): Promise<Reservation[]> {
+    return this.reservationsRepository.find({ relations: ['vehicle', 'user'] });
   }
 
   findOne(id: number) {
@@ -17,7 +34,11 @@ export class ReservationsService {
   }
 
   update(id: number, updateReservationDto: UpdateReservationDto) {
-    return `This action updates a #${id} reservation`;
+    return `This action updas a #${id} reservation`;
+  }
+
+  delete(deleteReservationDto: DeleteReservationDto) {
+    return this.reservationsRepository.delete(deleteReservationDto.id);
   }
 
   remove(id: number) {

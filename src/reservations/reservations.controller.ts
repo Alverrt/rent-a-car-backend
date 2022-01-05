@@ -10,6 +10,7 @@ import {
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
+import { DeleteReservationDto } from './dto/delete-reservation.dto';
 
 @Controller('reservations')
 export class ReservationsController {
@@ -18,6 +19,11 @@ export class ReservationsController {
   @Post()
   create(@Body() createReservationDto: CreateReservationDto) {
     return this.reservationsService.create(createReservationDto);
+  }
+
+  @Post('delete')
+  delete(@Body() deleteReservationDto: DeleteReservationDto) {
+    return this.reservationsService.delete(deleteReservationDto);
   }
 
   @Get()
